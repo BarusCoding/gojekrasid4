@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { 
   MapPin, Clock, TrendingUp, Zap, 
-  Navigation, ShieldCheck, Motorcycle, Battery 
+  Navigation, ShieldCheck, Bike, Battery 
 } from 'lucide-react';
 
 const DriverDashboard: React.FC = () => {
@@ -125,7 +125,7 @@ const DriverDashboard: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Motorcycle className="h-5 w-5 text-gray-500" />
+                  <Bike className="h-5 w-5 text-gray-500" />
                   <span className="text-sm font-medium">Vehicle Health</span>
                 </div>
                 <Badge className="bg-green-500">Good</Badge>
