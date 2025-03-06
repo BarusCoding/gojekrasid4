@@ -1,13 +1,29 @@
-// Update this page (the content is just a fallback if you fail to update the page)
 
-const Index = () => {
+import React from 'react';
+import Navbar from '../components/layout/Navbar';
+import BottomNavigation from '../components/layout/BottomNavigation';
+import Hero from '../components/home/Hero';
+import FeaturedServices from '../components/home/FeaturedServices';
+import RecentActivity from '../components/home/RecentActivity';
+import PromoCarousel from '../components/home/PromoCarousel';
+
+const Index: React.FC = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <main className="min-h-screen bg-gray-50 pb-16">
+      <Navbar />
+      
+      <div className="container max-w-lg mx-auto px-4">
+        <Hero />
+        
+        <div className="space-y-6 mt-2">
+          <FeaturedServices />
+          <PromoCarousel />
+          <RecentActivity />
+        </div>
       </div>
-    </div>
+      
+      <BottomNavigation activeTab="home" />
+    </main>
   );
 };
 
