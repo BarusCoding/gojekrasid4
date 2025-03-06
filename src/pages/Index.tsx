@@ -9,9 +9,12 @@ import PromoCarousel from '../components/home/PromoCarousel';
 import OrderHistory from '../components/order/OrderHistory';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocation } from 'react-router-dom';
 
 const Index: React.FC = () => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  const [activeTab, setActiveTab] = React.useState('home');
 
   return (
     <main className="min-h-screen bg-gray-50 pb-16">
@@ -20,7 +23,11 @@ const Index: React.FC = () => {
       <div className="container max-w-lg mx-auto px-4">
         <Hero />
         
-        <Tabs defaultValue="home" className="mt-4">
+        <Tabs 
+          defaultValue="home" 
+          className="mt-4"
+          onValueChange={(value) => setActiveTab(value)}
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="home">Home</TabsTrigger>
             <TabsTrigger value="orders">My Orders</TabsTrigger>
@@ -44,7 +51,7 @@ const Index: React.FC = () => {
         </Tabs>
       </div>
       
-      <BottomNavigation activeTab="home" />
+      <BottomNavigation activeTab={activeTab} />
     </main>
   );
 };

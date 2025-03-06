@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useOrder } from '@/services/orderService';
+import { useOrder, Order } from '@/services/orderService';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,16 +10,16 @@ import { Bike, ShoppingCart, Package, MapPin, Clock } from 'lucide-react';
 const OrderHistory: React.FC = () => {
   const { user } = useAuth();
   const { getConsumerOrders, cancelOrder } = useOrder();
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   
   useEffect(() => {
     if (user) {
       const userOrders = getConsumerOrders(user.id);
       setOrders(userOrders);
     }
-  }, [user]);
+  }, [user, getConsumerOrders]);
   
-  const handleCancelOrder = (orderId) => {
+  const handleCancelOrder = (orderId: string) => {
     const updatedOrder = cancelOrder(orderId);
     if (updatedOrder) {
       setOrders(prevOrders => 
@@ -30,7 +30,7 @@ const OrderHistory: React.FC = () => {
     }
   };
   
-  const getOrderIcon = (type) => {
+  const getOrderIcon = (type: string) => {
     switch (type) {
       case 'goride':
         return <Bike className="h-6 w-6 text-green-500" />;
@@ -45,7 +45,7 @@ const OrderHistory: React.FC = () => {
     }
   };
   
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
         return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Pending</Badge>;

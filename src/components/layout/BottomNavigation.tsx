@@ -58,11 +58,19 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab = 'home' 
             key={item.value}
             to={item.path}
             className={cn(
-              "bottom-nav-item w-full",
-              activeTab === item.value && "active"
+              "flex flex-col items-center justify-center text-xs w-full h-full px-1",
+              "text-gray-500 transition-colors duration-200",
+              activeTab === item.value || location.pathname === item.path
+                ? "text-gojek-primary"
+                : "hover:text-gray-700"
             )}
           >
-            <item.icon className="w-6 h-6" />
+            <item.icon className={cn(
+              "w-5 h-5 mb-1",
+              activeTab === item.value || location.pathname === item.path
+                ? "text-gojek-primary"
+                : "text-gray-500"
+            )} />
             <span>{item.label}</span>
           </Link>
         ))}

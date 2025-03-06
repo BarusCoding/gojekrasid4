@@ -27,6 +27,70 @@ export interface Order {
   notes?: string;
 }
 
+// Sample orders for demonstration
+const sampleOrders: Order[] = [
+  {
+    id: 'order-123456',
+    type: 'goride',
+    status: 'pending',
+    consumerId: '3',
+    price: 25000,
+    timestamp: Date.now() - 3600000,
+    pickup: {
+      address: 'Jl. Sudirman No. 1, Jakarta',
+      latitude: -6.2088,
+      longitude: 106.8456
+    },
+    destination: {
+      address: 'Jl. Gatot Subroto No. 10, Jakarta',
+      latitude: -6.2297,
+      longitude: 106.8251
+    },
+    notes: 'Please call when you arrive'
+  },
+  {
+    id: 'order-123457',
+    type: 'gofood',
+    status: 'pending',
+    consumerId: '3',
+    price: 78000,
+    timestamp: Date.now() - 7200000,
+    pickup: {
+      address: 'McDonalds Sarinah',
+      latitude: -6.1934,
+      longitude: 106.8241
+    },
+    destination: {
+      address: 'Jl. Thamrin No. 25, Jakarta',
+      latitude: -6.1957,
+      longitude: 106.8231
+    },
+    restaurantName: 'McDonalds',
+    items: [
+      {
+        id: 'item-1',
+        name: 'Big Mac',
+        quantity: 2,
+        price: 50000
+      },
+      {
+        id: 'item-2',
+        name: 'Fries',
+        quantity: 1,
+        price: 28000
+      }
+    ],
+    notes: 'Extra ketchup please'
+  }
+];
+
+// Initialize local storage with sample orders if none exist
+const initializeOrders = () => {
+  if (!localStorage.getItem('gojek_orders')) {
+    localStorage.setItem('gojek_orders', JSON.stringify(sampleOrders));
+  }
+};
+
 // Mock local storage-based order service
 export const orderService = {
   createOrder: (order: Omit<Order, 'id' | 'timestamp' | 'status'>): Order => {
@@ -45,6 +109,7 @@ export const orderService = {
   },
   
   getOrders: (): Order[] => {
+    initializeOrders();
     const ordersJson = localStorage.getItem('gojek_orders');
     return ordersJson ? JSON.parse(ordersJson) : [];
   },
@@ -87,6 +152,9 @@ export const orderService = {
     return orders.filter(order => order.driverId === driverId);
   }
 };
+
+// Call initialize when the module is loaded
+initializeOrders();
 
 // Custom hook for ordering
 export const useOrder = () => {
