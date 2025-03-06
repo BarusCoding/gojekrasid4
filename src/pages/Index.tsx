@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '../components/layout/Navbar';
 import BottomNavigation from '../components/layout/BottomNavigation';
 import Hero from '../components/home/Hero';
@@ -16,17 +16,34 @@ const Index: React.FC = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = React.useState('home');
 
+  // Update active tab based on location
+  useEffect(() => {
+    if (location.pathname === '/orders') {
+      setActiveTab('orders');
+    } else if (location.pathname === '/search') {
+      setActiveTab('search');
+    } else if (location.pathname === '/nearby') {
+      setActiveTab('nearby');
+    } else if (location.pathname === '/profile') {
+      setActiveTab('profile');
+    } else {
+      setActiveTab('home');
+    }
+  }, [location.pathname]);
+
   return (
     <main className="min-h-screen bg-gray-50 pb-16">
       <Navbar />
       
-      <div className="container max-w-lg mx-auto px-4">
+      <div className="container max-w-lg mx-auto px-4 pt-16">
         <Hero />
         
         <Tabs 
-          defaultValue="home" 
+          value={activeTab === 'orders' ? 'orders' : 'home'} 
           className="mt-4"
-          onValueChange={(value) => setActiveTab(value)}
+          onValueChange={(value) => {
+            setActiveTab(value === 'orders' ? 'orders' : 'home');
+          }}
         >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="home">Home</TabsTrigger>

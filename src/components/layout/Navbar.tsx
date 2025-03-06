@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { Bell, Search, User, LogOut, Menu } from 'lucide-react';
+import { Bell, Search, User, LogOut, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,11 +14,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -38,6 +41,10 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out",
+    });
     navigate('/login');
   };
 
@@ -58,6 +65,42 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const getMenuItems = () => {
+    if (!user) {
+      return [
+        { name: 'Home', path: '/' },
+        { name: 'Services', path: '/services' },
+        { name: 'Promos', path: '/promos' },
+      ];
+    }
+    
+    switch (user.role) {
+      case 'admin':
+        return [
+          { name: 'Dashboard', path: '/admin' },
+          { name: 'Users', path: '/admin/users' },
+          { name: 'Drivers', path: '/admin/drivers' },
+          { name: 'Orders', path: '/admin/orders' },
+          { name: 'Settings', path: '/admin/settings' },
+        ];
+      case 'driver':
+        return [
+          { name: 'Dashboard', path: '/driver' },
+          { name: 'Map', path: '/driver/map' },
+          { name: 'Orders', path: '/driver/orders' },
+          { name: 'Profile', path: '/driver/profile' },
+        ];
+      case 'consumer':
+      default:
+        return [
+          { name: 'Home', path: '/' },
+          { name: 'Services', path: '/services' },
+          { name: 'Orders', path: '/orders' },
+          { name: 'Nearby', path: '/nearby' },
+        ];
+    }
+  };
+
   return (
     <nav 
       className={cn(
@@ -70,26 +113,23 @@ const Navbar: React.FC = () => {
       <div className="container max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <a href="/" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <span className="text-xl font-bold text-gojek-primary tracking-tight">
                 Gojek
               </span>
-            </a>
+            </Link>
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
-            <a href="/" className="menu-link">
-              Home
-            </a>
-            <a href="#" className="menu-link">
-              Services
-            </a>
-            <a href="#" className="menu-link">
-              Promos
-            </a>
-            <a href="#" className="menu-link">
-              Orders
-            </a>
+            {getMenuItems().map((item, index) => (
+              <Link 
+                key={index} 
+                to={item.path} 
+                className="menu-link text-gray-600 hover:text-gojek-primary"
+              >
+                {item.name}
+              </Link>
+            ))}
           </div>
           
           <div className="flex items-center space-x-4">
@@ -148,8 +188,50 @@ const Navbar: React.FC = () => {
                 Login
               </Button>
             )}
+            
+            {/* Mobile menu button */}
+            <button 
+              className="md:hidden p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5 text-gray-600" />
+              ) : (
+                <Menu className="w-5 h-5 text-gray-600" />
+              )}
+            </button>
           </div>
         </div>
+        
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden pt-4 pb-2">
+            <div className="flex flex-col space-y-2">
+              {getMenuItems().map((item, index) => (
+                <Link 
+                  key={index} 
+                  to={item.path} 
+                  className="py-2 px-4 hover:bg-gray-100 rounded-md text-gray-600"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              {isAuthenticated && (
+                <button 
+                  className="flex items-center py-2 px-4 hover:bg-gray-100 rounded-md text-red-500"
+                  onClick={() => {
+                    handleLogout();
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Log out
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
