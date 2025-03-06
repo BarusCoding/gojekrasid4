@@ -1,70 +1,71 @@
 
 import React from 'react';
-import { Home, Search, MapPin, Clock, User } from 'lucide-react';
+import { Home, Search, MapPin, Clock, User, BarChart3, Truck, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { Link, useLocation } from 'react-router-dom';
 
 interface BottomNavigationProps {
   activeTab?: string;
 }
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab = 'home' }) => {
+  const { user } = useAuth();
+  const location = useLocation();
+  
+  // Don't show bottom navigation on login page
+  if (location.pathname === '/login') {
+    return null;
+  }
+  
+  // Different navigation items based on user role
+  const getNavigationItems = () => {
+    switch (user?.role) {
+      case 'admin':
+        return [
+          { icon: BarChart3, label: 'Dashboard', path: '/admin', value: 'dashboard' },
+          { icon: User, label: 'Users', path: '/admin/users', value: 'users' },
+          { icon: Truck, label: 'Drivers', path: '/admin/drivers', value: 'drivers' },
+          { icon: Clock, label: 'Orders', path: '/admin/orders', value: 'orders' },
+          { icon: Settings, label: 'Settings', path: '/admin/settings', value: 'settings' },
+        ];
+      case 'driver':
+        return [
+          { icon: BarChart3, label: 'Dashboard', path: '/driver', value: 'dashboard' },
+          { icon: MapPin, label: 'Map', path: '/driver/map', value: 'map' },
+          { icon: Clock, label: 'Orders', path: '/driver/orders', value: 'orders' },
+          { icon: User, label: 'Profile', path: '/driver/profile', value: 'profile' },
+        ];
+      case 'consumer':
+      default:
+        return [
+          { icon: Home, label: 'Home', path: '/', value: 'home' },
+          { icon: Search, label: 'Search', path: '/search', value: 'search' },
+          { icon: Clock, label: 'Orders', path: '/orders', value: 'orders' },
+          { icon: MapPin, label: 'Nearby', path: '/nearby', value: 'nearby' },
+          { icon: User, label: 'Profile', path: '/profile', value: 'profile' },
+        ];
+    }
+  };
+  
+  const navItems = getNavigationItems();
+  
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.05)] md:hidden">
       <div className="flex items-center justify-around h-16 px-2">
-        <a 
-          href="#" 
-          className={cn(
-            "bottom-nav-item w-full",
-            activeTab === 'home' && "active"
-          )}
-        >
-          <Home className="w-6 h-6" />
-          <span>Home</span>
-        </a>
-        
-        <a 
-          href="#" 
-          className={cn(
-            "bottom-nav-item w-full",
-            activeTab === 'search' && "active"
-          )}
-        >
-          <Search className="w-6 h-6" />
-          <span>Search</span>
-        </a>
-        
-        <a 
-          href="#" 
-          className={cn(
-            "bottom-nav-item w-full",
-            activeTab === 'orders' && "active"
-          )}
-        >
-          <Clock className="w-6 h-6" />
-          <span>Orders</span>
-        </a>
-        
-        <a 
-          href="#" 
-          className={cn(
-            "bottom-nav-item w-full",
-            activeTab === 'nearby' && "active"
-          )}
-        >
-          <MapPin className="w-6 h-6" />
-          <span>Nearby</span>
-        </a>
-        
-        <a 
-          href="#" 
-          className={cn(
-            "bottom-nav-item w-full",
-            activeTab === 'profile' && "active"
-          )}
-        >
-          <User className="w-6 h-6" />
-          <span>Profile</span>
-        </a>
+        {navItems.map((item) => (
+          <Link
+            key={item.value}
+            to={item.path}
+            className={cn(
+              "bottom-nav-item w-full",
+              activeTab === item.value && "active"
+            )}
+          >
+            <item.icon className="w-6 h-6" />
+            <span>{item.label}</span>
+          </Link>
+        ))}
       </div>
     </div>
   );
