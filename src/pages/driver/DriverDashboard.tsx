@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -85,9 +86,8 @@ const DriverDashboard: React.FC = () => {
       setHistoryOrders(prev => [
         {
           ...completedOrder,
-          status: 'completed',
-          driverId: user?.id
-        } as Order,
+          status: 'completed' as const
+        },
         ...prev
       ]);
       toast({
@@ -102,7 +102,7 @@ const DriverDashboard: React.FC = () => {
       const updatedOrder = acceptOrder(orderId, user.id);
       if (updatedOrder) {
         const updatedActiveOrders = activeOrders.map(order => 
-          order.id === orderId ? { ...order, status: 'accepted', driverId: user.id } : order
+          order.id === orderId ? { ...order, status: 'accepted' as const, driverId: user.id } : order
         );
         setActiveOrders(updatedActiveOrders);
         toast({
