@@ -6,7 +6,9 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
+  // For GitHub Pages deployment
   const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+  const base = isGitHubPages ? '/gojekrasid4/' : '/';
   
   return {
     server: {
@@ -23,6 +25,6 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
-    base: isGitHubPages ? './' : '/',
+    base: base,
   };
 });

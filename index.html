@@ -15,10 +15,15 @@
       (function() {
         const isGitHubPages = window.location.hostname.includes('github.io');
         if (isGitHubPages) {
-          const repoName = window.location.pathname.split('/')[1];
+          const repoName = '/gojekrasid4'; // Hardcoded repo name for this specific deployment
           const baseElement = document.createElement('base');
-          baseElement.href = '/' + repoName + '/';
+          baseElement.href = repoName + '/';
           document.head.appendChild(baseElement);
+          
+          // Also adjust assets path for GitHub Pages
+          window.assetPath = repoName;
+        } else {
+          window.assetPath = '';
         }
       })();
     </script>
