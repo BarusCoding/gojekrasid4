@@ -9,18 +9,18 @@
     <meta name="author" content="Rasid Team" />
     <meta property="og:image" content="/og-image.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <!-- Add base href for GitHub Pages deployment -->
+    <!-- Script untuk GitHub Pages -->
     <script type="text/javascript">
-      // Add dynamic base href for GitHub Pages
+      // Menambahkan base href dinamis untuk GitHub Pages
       (function() {
         const isGitHubPages = window.location.hostname.includes('github.io');
         if (isGitHubPages) {
-          const repoName = '/gojekrasid4'; // Hardcoded repo name for this specific deployment
+          const repoName = '/gojekrasid4'; // Nama repo untuk deployment ini
           const baseElement = document.createElement('base');
           baseElement.href = repoName + '/';
           document.head.appendChild(baseElement);
           
-          // Also adjust assets path for GitHub Pages
+          // Menyesuaikan path aset untuk GitHub Pages
           window.assetPath = repoName;
         } else {
           window.assetPath = '';
@@ -31,7 +31,7 @@
 
   <body>
     <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <!-- PENTING: JANGAN HAPUS SCRIPT TAG INI ATAU KOMEN INI! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
